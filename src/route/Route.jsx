@@ -8,19 +8,33 @@ import DashBoardHome from "../companyDashboard/Home/Home/DashBoardHome";
 import AddProduct from "../companyDashboard/Home/Home/AddProduct";
 import CustomerDashboard from "../page/CustomerDashboard";
 import MyCart from "../page/MyCart";
+import UserPrivate from "../secureRoute/UserPrivate";
 import AllProducts from "../page/ownerDashboard/AllProducts";
 import PendingOrder from "../companyDashboard/Home/Home/PendingOrder";
 import PendingDelevery from "../companyDashboard/Home/Home/PendingDelevery";
 import CumpanySecure from "../secureRoute/CumpanySecure";
 import AuthorSecure from "../secureRoute/AuthorSecure";
-import Settings from "../companyDashboard/Home/Home/Settings";
+import SpecialSecure from "../secureRoute/SpecialSecure";
+import FishDetails from "../component/fishCard/FishDetails";
+import OrderTracking from "../component/orderTruck/OrderTruck";
+import Review from "../page/Review";
+
+import Setting from "../companyDashboard/Home/Home/Setting";
+import UserHandle from "../companyDashboard/Home/Home/UserHandle";
+import Blog from "../page/blogs/Blog";
+import SingleBlog from "../component/blog/SingleBlog";
+import BlogDetails from "../component/blog/BlogDetails";
+import About from "../pages/about/About";
+import Services from "../pages/services/Services";
+import Faq from "../pages/faq/Faq";
+import Contact from "../page/contact/Contact";
 
 export const router = createBrowserRouter([
 
 {
 path:'/',
 element:<Main></Main>,
-errorElement: <p>Page Not Found</p>,
+
 
 
 children:[
@@ -38,6 +52,10 @@ children:[
     element:<RegistrationPage></RegistrationPage>
 },
 {
+    path:'/review',
+    element:<Review></Review>
+},
+{
     path:'/userDashboard',
     element:<CustomerDashboard></CustomerDashboard>
 },
@@ -49,6 +67,48 @@ children:[
     path:'/buy/:id',
     element:<MyCart></MyCart>  
 }
+,
+{
+    path:'/details/:id',
+    element: <FishDetails></FishDetails>
+    
+},
+{
+    path:'/blogs',
+    element: <Blog></Blog>
+    
+},
+{
+    path:'blogs/blogDetails/:id',
+    element: <BlogDetails></BlogDetails>
+    
+},
+{
+    path:'/about',
+    element: <About></About>
+    
+},
+{
+path:'/services',
+element: <Services></Services>
+},
+{
+path:'/faq',
+element: <Faq></Faq>
+},
+{
+path:'/contact',
+element: <Contact></Contact>
+},
+
+{
+    path:'/trackOrder',
+    element: <UserPrivate>
+
+<OrderTracking></OrderTracking>
+    </UserPrivate>
+}
+
 
 ]
 },
@@ -100,11 +160,15 @@ children:[
             </CumpanySecure>
         },
         {
-            path:'/dashboard/settings',
-            element:<CumpanySecure>
-<Settings></Settings>
-            </CumpanySecure>
-        }
+            path:'/dashboard/userHandle',
+            element:<SpecialSecure>
+                <UserHandle/>
+            </SpecialSecure>},
+        {
+            path:'/dashboard/setting',
+            element:<SpecialSecure>
+                <Setting/>
+            </SpecialSecure>}
     ]
 }
 

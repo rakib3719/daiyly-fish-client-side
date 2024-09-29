@@ -41,20 +41,20 @@ const DeleveryRow = ({ data, idx, refetch }) => {
     window.print();
   };
 
-  const productInfo = data?.productInfo;
+  const proudctInfo= data?.proudctInfo;
 
   return (
     <>
       <tr>
-        <td className="p-3">{idx + 1}</td>
+        <td className="p-3">{idx }</td>
         <td className="p-3 hidden md:block ">{data._id}</td>
         <td className="p-3">{data?.name || 'Unknown'}</td>
-        <td className="p-3">{data?.status || 'Unknown'}</td>
+        <td className="p-3"> {data?.status || 'Unknown'}</td>
         <td className="p-3 hidden md:block ">{data?.mobileNumber || 'Unknown'}</td>
         <td className="p-3">
           <button
             onClick={openModal}
-            className="flex items-center px-4 py-2 bg-[#2b97a4] text-white rounded-md hover:bg-[#9a0f31] focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:ring-opacity-50 transition duration-200"
+            className="flex items-center px-4 py-2 bg-[#aa1936] text-white rounded-md hover:bg-[#9a0f31] focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:ring-opacity-50 transition duration-200"
           >
             <FaInfoCircle className="mr-2" />
             Details
@@ -97,13 +97,14 @@ const DeleveryRow = ({ data, idx, refetch }) => {
               <div>
                 <h4 className="text-lg font-semibold">Invoice Details:</h4>
                 <p><strong>Invoice ID:</strong> {data._id}</p>
-                <p><strong>Date:</strong> {new Date().toLocaleDateString()}</p>
+                <p><strong>Order Date:</strong> {new Date().toLocaleDateString()}</p>
+                <p><strong>Delevery Date:</strong> "   "</p>
               </div>
             </div>
             <div className="mb-6">
               <h4 className="text-lg font-semibold">Order Summary:</h4>
               <ul className="list-disc pl-5">
-                {productInfo && Object.entries(productInfo).map(([product, quantity], idx) => (
+                {proudctInfo&& Object.entries(proudctInfo).map(([product, quantity], idx) => (
                   <li key={idx}>{product}: {quantity} KG</li>
                 ))}
               </ul>
@@ -130,7 +131,7 @@ const DeleveryRow = ({ data, idx, refetch }) => {
             </button>
             <button
               onClick={closeModal}
-              className="px-4 py-2 bg-[#2b97a4] text-white rounded-md hover:bg-[#9a0f31] focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:ring-opacity-50 transition duration-200"
+              className="px-4 py-2 bg-[#aa1936] text-white rounded-md hover:bg-[#9a0f31] focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:ring-opacity-50 transition duration-200"
             >
               Close
             </button>

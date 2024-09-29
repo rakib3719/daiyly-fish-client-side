@@ -52,7 +52,7 @@ const axiosSecure =  useAxiosSecure()
         <td className="p-3">
           <button
             onClick={openModal}
-            className="flex items-center px-4 py-2 bg-[#2b97a4] text-white rounded-md hover:bg-[#9a0f31] focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:ring-opacity-50 transition duration-200"
+            className="flex items-center px-4 py-2 bg-[#aa1936] text-white rounded-md hover:bg-[#9a0f31] focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:ring-opacity-50 transition duration-200"
           >
             <FaInfoCircle className="mr-2" />
             Details
@@ -96,7 +96,7 @@ const axiosSecure =  useAxiosSecure()
             </button>
             <button
               onClick={closeModal}
-              className="px-4 py-2 bg-[#2b97a4] text-white rounded-md hover:bg-[#9a0f31] focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:ring-opacity-50 transition duration-200"
+              className="px-4 py-2 bg-[#aa1936] text-white rounded-md hover:bg-[#9a0f31] focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:ring-opacity-50 transition duration-200"
             >
               Close
             </button>

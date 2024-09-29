@@ -6,6 +6,7 @@ import {  RouterProvider } from 'react-router-dom'
 import { router } from './route/Route'
 import AuthProvider from './provider/AuthProvider'
 import 'react-toastify/dist/ReactToastify.css';
+import 'react-quill/dist/quill.snow.css';
 import {
   QueryClient,
   QueryClientProvider,

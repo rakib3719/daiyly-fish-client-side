@@ -1,10 +1,11 @@
 
 import { useContext, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc'; // Import Google icon from react-icons
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import { AuthContext } from '../provider/AuthProvider';
 import { imageUpload } from '../utilites/photoUpload';
+import usePublicAxios from '../hooks/usePublicAxios';
 
 const RegistrationPage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -14,17 +15,35 @@ const RegistrationPage = () => {
   };
   const  {registar, updateUser, loginWithGoogle} = useContext(AuthContext)
 const [regloader, setRegloader] = useState(false)
+const navigate = useNavigate()
 
 const googleLogin = async()=> {
   try{
   
     await loginWithGoogle()
     toast.success("Login Success")
+    setTimeout(() => {
+      navigate('/')
+    }, 2000);
   
   }catch(err){
     toast.error(err.message)
   }
     }
+    const axiosPublic = usePublicAxios()
+
+const saveUser = async(userInfo)=>{
+
+
+try {
+   await axiosPublic.post('/saveUser', userInfo)
+} catch (error) {
+  return toast.error(error.message)
+}
+ 
+
+
+}
 
   const registarHandle =async e =>{
     setRegloader(true)
@@ -36,7 +55,7 @@ const name = form.name.value;
 const email = form.email.value;
 const password = form.password.value;
 const confirmPassword = form.confirmPassword.value;
-const photo = form.photo.files[0]
+const photo = form.photo.files[0] || null;
 
 
 
@@ -57,14 +76,32 @@ try{
 
   const image_url = await imageUpload(photo)
   console.log(image_url)
+
+
+  const userInfo = {
+
+    userName : name,
+    userEmail: email,
+    userPhoto : image_url,
+    userRole: "user"
+
+  }
+  await saveUser (userInfo)
+
   //2. User Registration
   const result = await registar(email, password)
   console.log(result)
 
   // 3. Save username and photo in firebase
   await updateUser(name, image_url)
+
+ 
+
   setRegloader(false)
 toast.success('Regestration Sucessfully')
+setTimeout(() => {
+  navigate('/')
+}, 2000);
 
 
 }catch(err){
@@ -143,7 +180,7 @@ setRegloader(false)
               type="file"
               accept="image/*"
               onChange={handleFileChange}
-              className="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#2b97a4] file:text-white hover:file:bg-indigo-700"
+              className="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#aa1936] file:text-white hover:file:bg-indigo-700"
             />
           </div>
 
@@ -156,7 +193,7 @@ setRegloader(false)
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b97a4] hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#aa1936] hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
           {  regloader? "Loading...":  "Register"}
             </button>
@@ -172,7 +209,7 @@ setRegloader(false)
         </div>
         <div onClick={googleLogin} className="mt-4 flex justify-center items-center space-x-2 border-2 p-2 hover:bg-gray-200">
           <FcGoogle size={28} />
-          <span className="text-sm font-medium text-gray-900">Sign in with Google</span>
+          <span className="text-sm cursor-pointer font-medium text-gray-900">Sign in with Google</span>
         </div>
       </div>
     </div>

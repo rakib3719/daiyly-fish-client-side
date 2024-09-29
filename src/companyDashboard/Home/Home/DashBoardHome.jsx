@@ -50,10 +50,10 @@ return count;
   })
   const {data:confirmed, isLoading: confirmedLoader} = useQuery({
 
-    queryKey: "countFish",
+    queryKey: "confirmedOrder",
     queryFn: async ()=>{
 
-const count = await axiosSecure.get('/courier');
+const count = await axiosSecure.get('/confirmed');
 return count;
     }
   })
@@ -145,6 +145,7 @@ return count;
               <h2 className="text-2xl font-bold">Pending Deliveries</h2>
               <p className="text-white mt-2">Orders waiting to be delivered</p>
             </div>
+            </div>
             <div className="text-4xl font-semibold">
           {confirmedLoader ? "..." : confirmed?.data?.count}
             </div>
@@ -152,22 +153,10 @@ return count;
         </div>
 
         {/* Customer Satisfaction */}
-        <div 
-          className="p-6 rounded-lg shadow-2xl bg-gradient-to-r from-yellow-400 to-yellow-600 text-white transform hover:scale-105 transition-transform"
-          data-aos="fade-up" data-aos-delay="500"
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold">Customer Satisfaction</h2>
-              <p className="text-white mt-2">Customer satisfaction rate</p>
-            </div>
-            <div className="text-4xl font-semibold">
-              95%
-            </div>
-          </div>
-        </div>
+        
       </div>
-    </div>
+   
+   
   );
 };
 

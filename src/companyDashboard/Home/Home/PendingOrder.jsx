@@ -4,6 +4,8 @@ import { AuthContext } from "../../../provider/AuthProvider";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import PendingRow from "./PendingRow";
 import { ToastContainer } from "react-toastify";
+import { ColorRing } from "react-loader-spinner";
+import ColorLoader from "../../../component/loader/ColorLoader";
 
 const PendingOrder = () => {
   const { user } = useContext(AuthContext);
@@ -19,7 +21,7 @@ const PendingOrder = () => {
   });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <ColorLoader></ColorLoader>;
   }
 
   if (error) {

@@ -2,7 +2,7 @@
 import Modal from 'react-modal';
 
 import { FcGoogle } from 'react-icons/fc'; 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../provider/AuthProvider';
 import { ToastContainer, toast } from 'react-toastify';
 import { useContext, useState } from 'react';
@@ -26,11 +26,15 @@ const LoginPage = () => {
   const [logLoader, setLogLoader] = useState(false);
   const { login,  resetPassword, loginWithGoogle  } = useContext(AuthContext);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const navigate = useNavigate()
   const googleLogin = async()=> {
 try{
 
   await loginWithGoogle()
   toast.success("Login Success")
+  setTimeout(() => {
+    navigate('/')
+  }, 2000);
 
 }catch(err){
   toast.error(err.message)
@@ -47,6 +51,9 @@ try{
       await login(email, password);
       toast.success('Login Successfully');
       setLogLoader(false);
+      setTimeout(() => {
+        navigate('/')
+      }, 2000);
     } catch (err) {
       toast.error(err.message);
       setLogLoader(false);
@@ -144,7 +151,7 @@ closeModal();
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#2b97a4] hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#aa1936] hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               {logLoader ? 'Loading...' : 'Login'}
             </button>
@@ -159,7 +166,7 @@ closeModal();
           </p>
         </div>
 
-        <div onClick={ googleLogin} className="mt-4 flex justify-center items-center space-x-2 border-2 p-2 hover:bg-gray-200">
+        <div onClick={ googleLogin} className="mt-4 flex justify-center cursor-pointer items-center space-x-2 border-2 p-2 hover:bg-gray-200">
           <FcGoogle size={28} />
           <span className="text-sm font-medium text-gray-900">Login in with Google</span>
         </div>
@@ -197,7 +204,7 @@ closeModal();
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-[#2b97a4] rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="px-4 py-2 text-sm font-medium text-white bg-[#aa1936] rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Reset Password
             </button>

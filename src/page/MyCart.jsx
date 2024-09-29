@@ -6,6 +6,7 @@ import { useContext, useState, useEffect } from 'react';
 import usePublicAxios from '../hooks/usePublicAxios';
 import ColorLoader from '../component/loader/ColorLoader';
 import { allDivision, districtsOf, upazilasOf } from '@bangladeshi/bangladesh-address';
+import ButtonLoader from '../component/loader/ButtonLoader';
 
 const MyCart = () => {
   const division = allDivision();
@@ -19,6 +20,8 @@ const MyCart = () => {
   const [selectedDivision, setSelectedDivision] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [upozela, setUpozela] = useState([]); // State for storing upazilas
+  const [loader, setLoader] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const allDistrict = districtsOf(selectedDivision);
 
@@ -107,6 +110,7 @@ const MyCart = () => {
 
   const handlePlaceOrder = async(e) => {
     e.preventDefault()
+    setLoader(true)
     const productNames = items.map((item) => `${item.productName} (${item.productNameBangla})`);
     const productImages = items.map((item) => item.productImage);
 
@@ -139,6 +143,7 @@ const MyCart = () => {
     const division = e.target.division.value;
     const district = e.target.district.value;
     const upozila = e.target.upozila.value;
+    const adressB = e.target.adressB.value;
    
 
     const productIds = items.map((item) => item._id)
@@ -157,12 +162,15 @@ address,
 comment,
 division,
 district,
-upozila
+upozila,
+adressB
 
      
     }
   
 await saveOrderInfo(orderInfo)
+
+
   };
 
   const saveOrderInfo = async(orderInfo)=>{
@@ -170,42 +178,64 @@ await saveOrderInfo(orderInfo)
   const {data} = await axiosPublic.post('/saveOrder', orderInfo)
  if(data.insertedId){
   toast.success('Order request sent')
+  localStorage.removeItem('cartItems')
   refetch()
+  setLoader(false)
+ }
+ else{
+  setLoader(false)
+  toast.error("Something wen wrong please try again!")
  }
   }
 
   const removeHandle = async (id) => {
-    if (user) {
-      const { data } = await axiosSecure.delete(`/removeCart/${id}?email=${user?.email}`);
 
-      if (data.deletedCount > 0) {
+
+setLoading(true)
+
+    
+    try {
+      if (user) {
+        const { data } = await axiosSecure.delete(`/removeCart/${id}?email=${user?.email}`);
+       
+  
+        if (data.deletedCount > 0) {
+          toast.warning('Removed fish from cart');
+    
+          refetch();
+          setLoading(false)
+        }
+      } else {
+        const updatedCartItems = localCartItems.filter((item) => item !== id);
+        setLocalCartItems(updatedCartItems);
+        localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
         toast.warning('Removed fish from cart');
-        refetch();
+        getData(updatedCartItems);
+        setLoading(false)
       }
-    } else {
-      const updatedCartItems = localCartItems.filter((item) => item !== id);
-      setLocalCartItems(updatedCartItems);
-      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-      toast.warning('Removed fish from cart');
-      getData(updatedCartItems);
+      
+      
+    } catch (error) {
+      
+      toast.error("Something went wrong please try again")
     }
   };
 
   return (
     <div>
-      <h1 className="text-2xl mt-8 font-bold text-center mb-6 text-[#2b97a4]">My Cart</h1>
+      <h1 className="text-2xl mt-8 font-bold text-center mb-6 text-[#aa1936]">My Cart</h1>
       <ToastContainer />
       <form onSubmit={handlePlaceOrder} className="mx-auto p-6 gap-8 justify-between md:flex bg-white rounded-lg shadow-lg mt-6">
 
       <div className="mt-6  flex-1">
           <div>
-            <h2 className="text-xl font-bold mb-2 text-[#2b97a4]">Billing Information</h2>
+            <h2 className="text-xl font-bold mb-2 text-[#aa1936]">Billing Information</h2>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2" htmlFor="name">
                 নাম
               </label>
               <input
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:border-transparent"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
                 type="text"
                 id="name"
                 name="name"
@@ -217,7 +247,7 @@ await saveOrderInfo(orderInfo)
                 মোবাইল নাম্বার
               </label>
               <input
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:border-transparent"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
                 type="tel"
                 id="phone"
                 name="mobileNumber"
@@ -229,12 +259,12 @@ await saveOrderInfo(orderInfo)
                 ইমেইল
               </label>
               <input
-  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:border-transparent"
+  className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
   type="email"
   id="email"
   name="email"
-  value={user?.email || ''}
-  readOnly={!!user}
+  value={ user?.email }
+
 />
             </div>
             <div className="mb-4">
@@ -242,7 +272,7 @@ await saveOrderInfo(orderInfo)
                 সম্পূর্ণ ঠিকানা
               </label>
               <input
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:border-transparent"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
                 type="text"
                 id="address"
                 name="adress"
@@ -254,7 +284,7 @@ await saveOrderInfo(orderInfo)
                 নির্দেশনা
               </label>
               <textarea
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:border-transparent"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
                 id="instructions"
                 name="comment"
               />
@@ -264,7 +294,7 @@ await saveOrderInfo(orderInfo)
                 বিভাগ
               </label>
               <select
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:border-transparent"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
                 id="division"
                 name="division"
                 value={selectedDivision}
@@ -281,37 +311,66 @@ await saveOrderInfo(orderInfo)
               <label className="block text-gray-700 font-bold mb-2" htmlFor="district">
                 জেলা
               </label>
-              <select
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:border-transparent"
+              {/* <select
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
                 id="district"
                 name="district"
                 value={selectedDistrict}
                 onChange={(e) => setSelectedDistrict(e.target.value)}
-                required
+             
               >
                 <option value="">জেলা নির্বাচন করুন</option>
                 {allDistrict.map((item, index) => (
                   <option key={index} value={item}>{item}</option>
                 ))}
-              </select>
+              </select> */}
+
+
+              <input
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
+                type="text"
+                 id="district"
+                name="district"
+                required
+              />
+
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2" htmlFor="upozela">
                 উপজেলা
               </label>
-              <select
-                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:border-transparent"
+              {/* <select
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
                 id="upozela"
                 name="upozila"
-                required
+              
               >
                 <option value="">উপজেলা নির্বাচন করুন</option>
                 {upozela.map((upazila, index) => (
                   <option key={index} value={upazila}>{upazila}</option>
                 ))}
-              </select>
+              </select> */}
+
+
+              <input
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
+                type="text"
+               id="upozela"
+                name="upozila"
+                required
+              />
+
             </div>
-         
+            <div className="mb-4">
+              <label className="block text-gray-700 font-bold mb-2" htmlFor="instructions">
+             ঠিকানাঃ ঠিকানাতে স্পেসিফিক কিছু ইনফরমেশন দিতে চাইলে এখানে দিন।
+              </label>
+              <textarea
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:border-transparent"
+                id="instructions"
+                name="adressB"
+              />
+            </div>
           </div>
         
         </div>
@@ -329,7 +388,7 @@ await saveOrderInfo(orderInfo)
                   className="w-24 h-24 object-cover rounded-lg mr-4"
                 />
                 <div className="flex-1">
-                  <h2 className="text-xl font-bold text-[#2b97a4]">{`${item.productNameBangla} (${item.productName})`}</h2>
+                  <h2 className="text-xl font-bold text-[#aa1936]">{`${item.productNameBangla} (${item.productName})`}</h2>
                   <p className="text-gray-700">Per Product Price: ${effectivePrice.toFixed(2)}</p>
                   <div className="flex items-center">
                   <button
@@ -357,9 +416,10 @@ await saveOrderInfo(orderInfo)
                   <button
                   type='button'
                     onClick={() => removeHandle(!user ? item?._id : item?.id)}
-                    className="px-4 py-2 text-white bg-[#2b97a4] rounded-md hover:bg-[#88172d] focus:outline-none focus:ring-2 focus:ring-[#2b97a4] focus:ring-offset-2 mb-2"
+                    className="px-4 py-2 text-white bg-[#aa1936] rounded-md hover:bg-[#88172d] focus:outline-none focus:ring-2 focus:ring-[#aa1936] focus:ring-offset-2 mb-2"
                   >
-                    Remove
+                 Remove
+                 
                   </button>
                 </div>
               </div>
@@ -367,7 +427,7 @@ await saveOrderInfo(orderInfo)
           })}
 
 <div className="mt-6">
-            <h2 className="text-xl font-bold mb-2 text-[#2b97a4]">Order Summary</h2>
+            <h2 className="text-xl font-bold mb-2 text-[#aa1936]">Order Summary</h2>
             <div className="flex justify-between mb-2">
               <p>Subtotal:</p>
               <p>${subTotal.toFixed(2)}</p>
@@ -383,10 +443,12 @@ await saveOrderInfo(orderInfo)
             </div>
             <button
   type="submit"
-  disabled={items.length === 0}
-  className={`w-full mt-4 py-3 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 ${items.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#2b97a4] hover:bg-[#88172d] focus:ring-[#2b97a4]'}`}
+  disabled={items.length === 0 || loader}
+  className={`w-full mt-4 py-3 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 ${items.length === 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#aa1936] hover:bg-[#88172d] focus:ring-[#aa1936]'}`}
 >
-  Place Order
+{
+  loader? <ButtonLoader className="text-center"/> : "Place Order"
+}
 </button>
 
 

@@ -24,7 +24,7 @@ const FishCard = () => {
     const skip = limit * (currentPage - 1);
 
     // Fetch fish data with search, filter, and pagination
-    const { data: allFish, isLoading } = useQuery({
+    const { data: allFish, isLoading, isError } = useQuery({
         queryKey: [currentPage, limit, filter, search],
         queryFn: async () => {
             const { data } = await axiosPublic.get(`/getFishTwo?skip=${skip}&limit=${limit}&type=${filter}&search=${search}`);
@@ -40,9 +40,7 @@ const FishCard = () => {
         setCurrentPage(1); // Reset to first page when searching
     };
 
-    if (isLoading || countLoading) {
-        return <ColorLoader />;
-    }
+  
 
     // Check if allFish is empty or has a length of zero
     const isNoFishData = !allFish || allFish.length === 0;
@@ -51,7 +49,7 @@ const FishCard = () => {
         <div className="px-4 lg:px-8 mt-28">
             {/* Title */}
             <div className="text-center mb-8">
-                <h2 className="text-3xl lg:text-4xl font-extrabold mb-4 text-[#2b97a4]">Fish Collection</h2>
+                <h2 className="text-3xl lg:text-4xl font-extrabold mb-4 text-[#aa1936]">Fish Collection</h2>
             </div>
 
             {/* Search and Filter Section */}
@@ -64,11 +62,11 @@ const FishCard = () => {
                             name="search"
                             defaultValue={search}
                             placeholder="🔍 Search for fish..."
-                            className="w-full py-3 pl-12 pr-4 rounded-md text-gray-600 focus:outline-none border border-gray-300 focus:ring-2 focus:ring-[#2b97a4] transition-all duration-300"
+                            className="w-full py-3 pl-12 pr-4 rounded-md text-gray-600 focus:outline-none border border-gray-300 focus:ring-2 focus:ring-[#aa1936] transition-all duration-300"
                         />
                         <button
                             type="submit"
-                            className="absolute right-0 top-0 bottom-0 bg-[#2b97a4] hover:bg-[#8f142c] text-white px-5 py-2 rounded-r-md transition-all duration-300"
+                            className="absolute right-0 top-0 bottom-0 bg-[#aa1936] hover:bg-[#8f142c] text-white px-5 py-2 rounded-r-md transition-all duration-300"
                         >
                             Search
                         </button>
@@ -85,25 +83,31 @@ const FishCard = () => {
                             setFilter(e.target.value);
                             setCurrentPage(1); // Reset to first page when filtering
                         }}
-                        className="w-full md:w-auto p-3 border border-gray-300 rounded-full focus:outline-none focus:border-[#2b97a4] transition-all duration-300"
+                        className="w-full md:w-auto p-3 border border-gray-300 rounded-full focus:outline-none focus:border-[#aa1936] transition-all duration-300"
                     >
                         <option value="">All Types</option>
-                        <option value="সামুদ্রিক">সামুদ্রিক</option>
-                        <option value="হাওড়">হাওড়</option>
-                        <option value="নদী">নদী</option>
+
+                        <option value="shutki">শুটকি</option>
+                        <option value="has">হাঁস-মুরগী
+
+
+                        </option>
+                        <option value="সামুদ্রিক">সামুদ্রিক মাছ</option>
+                        <option value="হাওড়">হাওড়ের মাছ</option>
+                        <option value="নদী">নদীর মাছ</option>
                     </select>
                 </div>
             </div>
 
             {/* Fish Card Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+         { !isLoading  ?  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {allFish && allFish.map(fish => (
                     <SingleFishCard key={fish._id} allFish={fish} />
                 ))}
-            </div>
+            </div> : <ColorLoader/>}
 
             {/* No Data Found Message */}
-            {isNoFishData && (
+            {isError && (
                 <h2 className="text-3xl lg:text-4xl font-extrabold mb-4 text-red-700 mt-28">
                     No data found! Please reload this page...
                 </h2>
@@ -124,7 +128,7 @@ const FishCard = () => {
                         <button
                             key={idx}
                             onClick={() => setCurrentPage(idx + 1)}
-                            className={idx + 1 === currentPage ? "join-item btn bg-[#2b97a4] hover:bg-[#2b97a4] text-white" : "join-item btn hover:bg-[#2b97a4] hover:text-white"}
+                            className={idx + 1 === currentPage ? "join-item btn bg-[#aa1936] hover:bg-[#aa1936] text-white" : "join-item btn hover:bg-[#aa1936] hover:text-white"}
                         >
                             {idx + 1}
                         </button>

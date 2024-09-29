@@ -1,7 +1,10 @@
 
+import Meet from "../../companyDashboard/Home/Home/Meet";
 import FishCard from "../../component/fishCard/FishCard";
 import Footer from "../../component/footer/Footer";
 import Banner from "../../component/home/Banner";
+import Feature from "../../component/home/Feature";
+import Update from "../../component/home/Update";
 
 
 const Home = () => {
@@ -9,7 +12,12 @@ const Home = () => {
         <div>
             <Banner/>
             <FishCard/>
-          <Footer/>
+            <Meet/>
+            <Update/>
+       
+            <Feature/>
+
+      
         </div>
     );
 };

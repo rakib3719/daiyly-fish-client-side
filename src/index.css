@@ -7,7 +7,7 @@
 
 .navbar .active{
 
-background-color: #2b97a4 !important;
+background-color: #aa1936 !important;
     
 }
 
@@ -55,5 +55,37 @@ background-color: #2b97a4 !important;
     animation: spin-slow 5s linear infinite;
   }
   
+
+  /* DeleveryRow.css */
+
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 5rem;
+  color: rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: -1;
+  transform: rotate(-30deg);
+}
+
+.print-section {
+  position: relative;
+}
+
+@media print {
+  .print-section {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .watermark {
+    display: none;
+  }
+}
+
   
 
